@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TextAppearance.MaterialComponents.Headline6"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_bar_header_height"
+    android:layout_marginTop="@dimen/nav_bar_header_top_margin"
+    android:layout_marginStart="@dimen/nav_bar_header_start_margin"
+    android:paddingBottom="@dimen/nav_bar_header_bottom_margin"
+    android:gravity="bottom"
+    android:textColor="@android:color/black"
+    android:text="@string/app_name" />
