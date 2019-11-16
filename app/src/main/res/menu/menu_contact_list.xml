@@ -6,4 +6,10 @@
         android:icon="@drawable/ic_search_24px"
         android:title="@string/title_search_contacts"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_item_sort"
+        android:icon="@drawable/ic_sort_by_alpha_24dp"
+        android:title="@string/text_sort"
+        app:showAsAction="ifRoom" />
 </menu>

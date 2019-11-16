@@ -8,15 +8,22 @@
     android:fitsSystemWindows="true"
     tools:context=".HomeActivity">
 
-    <include layout="@layout/partial_app_bar" />
-
-    <fragment
-        android:id="@+id/ac_home_nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/partial_app_bar" />
+
+        <fragment
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/ac_home_nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/ac_home_nav_view"

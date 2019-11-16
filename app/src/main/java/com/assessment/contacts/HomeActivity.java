@@ -3,7 +3,6 @@ package com.assessment.contacts;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -22,18 +21,20 @@ public class HomeActivity extends AppCompatActivity {
 
 		setSupportActionBar(findViewById(R.id.main_toolbar));
 
-		DrawerLayout drawerLayout = findViewById(R.id.ac_home_nav_drawer);
+		buildAppBarConfiguration();
+		setupNavigation();
+	}
 
-		NavigationView navigationView = findViewById(R.id.ac_home_nav_view);
-
+	private void buildAppBarConfiguration() {
 		mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_contact_list)
-				.setDrawerLayout(drawerLayout)
+				.setDrawerLayout(findViewById(R.id.ac_home_nav_drawer))
 				.build();
+	}
 
+	private void setupNavigation() {
 		NavController navController = Navigation.findNavController(this, R.id.ac_home_nav_host_fragment);
 		NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-		NavigationUI.setupWithNavController(navigationView, navController);
-
+		NavigationUI.setupWithNavController((NavigationView) findViewById(R.id.ac_home_nav_view), navController);
 	}
 
 	@Override
