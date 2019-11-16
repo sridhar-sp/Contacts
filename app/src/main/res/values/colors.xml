@@ -5,4 +5,13 @@
     <color name="colorAccent">#00BCD4</color>
 
     <color name="defaultIconColor">@android:color/white</color>
+
+    <array name="contactInitialBackgroundColors">
+        <item>#BCABA4</item>
+        <item>#B39DDB</item>
+        <item>#C5E1A6</item>
+        <item>#B0BFC6</item>
+        <item>#00BCD4</item>
+        <item>#006796</item>
+    </array>
 </resources>

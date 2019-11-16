@@ -9,6 +9,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.assessment.contacts.database.table.Contact;
+import com.assessment.contacts.database.table.model.ContactMinimal;
 
 import java.util.List;
 
@@ -30,4 +31,12 @@ public interface ContactDao {
 	@MainThread
 	@Query("SELECT * FROM contact")
 	LiveData<List<Contact>> getAll();
+
+	@MainThread
+	@Query("SELECT id,name FROM contact ORDER BY name DESC")
+	LiveData<List<ContactMinimal>> getAllContactsWithMinimalDetailsDesc();
+
+	@MainThread
+	@Query("SELECT id,name FROM contact ORDER BY name ASC")
+	LiveData<List<ContactMinimal>> getAllContactsWithMinimalDetailsAsc();
 }

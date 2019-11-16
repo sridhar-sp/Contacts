@@ -10,6 +10,7 @@
     android:orientation="horizontal">
 
     <TextView
+        android:id="@+id/tv_partial_contact_item_initial"
         android:background="@drawable/shape_circle_bg"
         tools:backgroundTint="@android:color/holo_blue_light"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
@@ -22,6 +23,7 @@
         android:layout_height="@dimen/contact_initial_size"/>
 
     <TextView
+        android:id="@+id/tv_partial_contact_item_name"
         tools:text="@string/app_name"
         android:textColor="@android:color/black"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
