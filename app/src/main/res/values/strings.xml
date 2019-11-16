@@ -3,7 +3,7 @@
 
     <string name="title_contact_list">Contact list</string>
 
-    <string name="title_search_contacts">Search contacts</string>
+    <string name="text_search_contacts">Search contacts</string>
 
     <string name="text_sort">Sort</string>
 </resources>

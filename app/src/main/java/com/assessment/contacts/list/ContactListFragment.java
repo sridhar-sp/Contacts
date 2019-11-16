@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,8 +19,6 @@ import com.assessment.contacts.Logger;
 import com.assessment.contacts.R;
 import com.assessment.contacts.database.table.model.ContactMinimal;
 import com.assessment.contacts.list.model.ContactListViewModel;
-
-import java.util.List;
 
 public class ContactListFragment extends Fragment {
 
@@ -55,15 +53,7 @@ public class ContactListFragment extends Fragment {
 		ContactListAdapter<ContactMinimal> adapter = new ContactListAdapter<>(getActivity());
 		recyclerView.setAdapter(adapter);
 
-//		mViewModel.getContactMinimalList().observe(this, adapter::setDataSet);
-
-		mViewModel.getContactMinimalList().observe(this, new Observer<List<ContactMinimal>>() {
-			@Override
-			public void onChanged(List<ContactMinimal> contactMinimals) {
-				Logger.log(TAG,"onChanged "+contactMinimals);
-				adapter.setDataSet(contactMinimals);
-			}
-		});
+		mViewModel.getContactMinimalList().observe(this, adapter::setDataSet);
 
 		mViewModel.loadAllContacts();
 	}
@@ -71,6 +61,14 @@ public class ContactListFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 		inflater.inflate(R.menu.menu_contact_list, menu);
+
+		MenuItem searchMenuItem = menu.findItem(R.id.menu_item_search);
+
+		SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+		searchView.setOnQueryTextListener(new SearchViewQueryTextListener());
+
+		searchMenuItem.setOnActionExpandListener(new SearchViewActionExpandListener(menu.findItem(R.id.menu_item_sort)));
 	}
 
 	@Override
@@ -83,6 +81,41 @@ public class ContactListFragment extends Fragment {
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private class SearchViewActionExpandListener implements MenuItem.OnActionExpandListener {
+
+		private MenuItem mSortMenuItem;
+
+		private SearchViewActionExpandListener(MenuItem sortMenuItem) {
+			this.mSortMenuItem = sortMenuItem;
+		}
+
+		@Override
+		public boolean onMenuItemActionExpand(MenuItem item) {
+			mSortMenuItem.setVisible(false);
+			return true;
+		}
+
+		@Override
+		public boolean onMenuItemActionCollapse(MenuItem item) {
+			mSortMenuItem.setVisible(true);
+			return true;
+		}
+	}
+
+	private class SearchViewQueryTextListener implements SearchView.OnQueryTextListener {
+		@Override
+		public boolean onQueryTextSubmit(String query) {
+			Logger.log(TAG, "onQueryTextSubmit " + query);
+			return false;
+		}
+
+		@Override
+		public boolean onQueryTextChange(String newText) {
+			Logger.log(TAG, "onQueryTextChange " + newText);
+			return false;
 		}
 	}
 }
