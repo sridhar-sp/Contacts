@@ -25,13 +25,6 @@ public interface ContactDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insert(List<Contact> contactList);
 
-	/**
-	 * @return The {@link LiveData} holder for the {@link List<Contact>}.
-	 */
-	@MainThread
-	@Query("SELECT * FROM contact")
-	LiveData<List<Contact>> getAll();
-
 	@MainThread
 	@Query("SELECT id,name FROM contact ORDER BY name DESC")
 	LiveData<List<ContactMinimal>> getAllContactsWithMinimalDetailsDesc();
@@ -39,4 +32,8 @@ public interface ContactDao {
 	@MainThread
 	@Query("SELECT id,name FROM contact ORDER BY name ASC")
 	LiveData<List<ContactMinimal>> getAllContactsWithMinimalDetailsAsc();
+
+	@WorkerThread
+	@Query("SELECT id,name FROM contact WHERE name LIKE :nameQuery")
+	List<ContactMinimal> filterContactsBasedOnUserName(String nameQuery);
 }

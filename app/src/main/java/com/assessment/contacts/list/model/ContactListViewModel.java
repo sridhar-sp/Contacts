@@ -4,10 +4,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.assessment.contacts.AppExecutorService;
 import com.assessment.contacts.Application;
 import com.assessment.contacts.Logger;
 import com.assessment.contacts.database.table.model.ContactMinimal;
@@ -52,16 +54,29 @@ public class ContactListViewModel extends ViewModel {
 		fetchDataFromDatabase();
 	}
 
-	private void fetchDataFromDatabase(){
-		doSort();
+	private void fetchDataFromDatabase() {
+		fetchContactBasedOnSortPreference();
+	}
+
+	public void enterSearchMode() {
+		removeLastAttachedDataSource();
+	}
+
+	public void searchContactAsync(@NonNull String query) {
+		AppExecutorService.getInstance().getBackgroundThreadExecutor().execute(() ->
+				mMediatorLiveData.postValue(mContactRepository.filterContactsBasedOnUserName(query)));
+	}
+
+	public void exitSearchMode() {
+		fetchContactBasedOnSortPreference();
 	}
 
 	public void toggleSort() {
 		isSortAsc = !isSortAsc;
-		doSort();
+		fetchContactBasedOnSortPreference();
 	}
 
-	private void doSort() {
+	private void fetchContactBasedOnSortPreference() {
 		if (isSortAsc)
 			attachSortAscDataSource();
 		else
@@ -69,8 +84,7 @@ public class ContactListViewModel extends ViewModel {
 	}
 
 	private void attachSortAscDataSource() {
-		if (null != mLastQueriedContactMinimalListLiveData)
-			mMediatorLiveData.removeSource(mLastQueriedContactMinimalListLiveData);
+		removeLastAttachedDataSource();
 
 		mLastQueriedContactMinimalListLiveData = mContactRepository.getAllContactsWithMinimalDetailsAsc();
 		mMediatorLiveData.addSource(mLastQueriedContactMinimalListLiveData,
@@ -78,14 +92,17 @@ public class ContactListViewModel extends ViewModel {
 	}
 
 	private void attachSortDescDataSource() {
-		if (null != mLastQueriedContactMinimalListLiveData)
-			mMediatorLiveData.removeSource(mLastQueriedContactMinimalListLiveData);
+		removeLastAttachedDataSource();
 
 		mLastQueriedContactMinimalListLiveData = mContactRepository.getAllContactsWithMinimalDetailsDesc();
 		mMediatorLiveData.addSource(mLastQueriedContactMinimalListLiveData,
 				contactMinimals -> mMediatorLiveData.setValue(contactMinimals));
 	}
 
+	private void removeLastAttachedDataSource() {
+		if (null != mLastQueriedContactMinimalListLiveData)
+			mMediatorLiveData.removeSource(mLastQueriedContactMinimalListLiveData);
+	}
 
 	private boolean isDataNetworkAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager)
@@ -94,5 +111,4 @@ public class ContactListViewModel extends ViewModel {
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return null != activeNetworkInfo && activeNetworkInfo.isConnected();
 	}
-
 }

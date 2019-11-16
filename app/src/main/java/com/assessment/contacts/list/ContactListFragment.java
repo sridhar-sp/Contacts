@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.assessment.contacts.AppExecutorService;
 import com.assessment.contacts.Logger;
 import com.assessment.contacts.R;
 import com.assessment.contacts.database.table.model.ContactMinimal;
@@ -22,14 +23,13 @@ import com.assessment.contacts.list.model.ContactListViewModel;
 
 public class ContactListFragment extends Fragment {
 
-	private static final String TAG = ContactListFragment.class.getSimpleName();
-
 	private ContactListViewModel mViewModel;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		setRetainInstance(true);
 	}
 
 	@Override
@@ -50,10 +50,15 @@ public class ContactListFragment extends Fragment {
 	private void setupContactList(View view) {
 		RecyclerView recyclerView = view.findViewById(R.id.rv_cl_frag_contact_list);
 
-		ContactListAdapter<ContactMinimal> adapter = new ContactListAdapter<>(getActivity());
+		ContactListAdapter<ContactMinimal> adapter = new ContactListAdapter<>(getContext());
 		recyclerView.setAdapter(adapter);
 
-		mViewModel.getContactMinimalList().observe(this, adapter::setDataSet);
+//		mViewModel.getContactMinimalList().observe(this, adapter::setDataSet);
+
+		mViewModel.getContactMinimalList().observe(this, contactMinimals -> {
+			Logger.log("HOME", "LIST " + contactMinimals);
+			adapter.setDataSet(contactMinimals);
+		});
 
 		mViewModel.loadAllContacts();
 	}
@@ -95,12 +100,17 @@ public class ContactListFragment extends Fragment {
 		@Override
 		public boolean onMenuItemActionExpand(MenuItem item) {
 			mSortMenuItem.setVisible(false);
+			mViewModel.enterSearchMode();
 			return true;
 		}
 
 		@Override
 		public boolean onMenuItemActionCollapse(MenuItem item) {
 			mSortMenuItem.setVisible(true);
+			//Menu collapse will clear the search view text, that wiil call
+			// {@link SearchViewQueryTextListener#onQueryTextChange} one last time after this call executes. hence
+			// exit from search mode in the next UI cycle.
+			AppExecutorService.getInstance().getMainThreadExecutor().execute(() -> mViewModel.exitSearchMode());
 			return true;
 		}
 	}
@@ -108,13 +118,12 @@ public class ContactListFragment extends Fragment {
 	private class SearchViewQueryTextListener implements SearchView.OnQueryTextListener {
 		@Override
 		public boolean onQueryTextSubmit(String query) {
-			Logger.log(TAG, "onQueryTextSubmit " + query);
 			return false;
 		}
 
 		@Override
 		public boolean onQueryTextChange(String newText) {
-			Logger.log(TAG, "onQueryTextChange " + newText);
+			mViewModel.searchContactAsync(newText);
 			return false;
 		}
 	}

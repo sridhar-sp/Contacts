@@ -64,6 +64,12 @@ public class ContactRepository implements IContactRepository {
 		return ContactDatabase.getDatabase().getContactDao().getAllContactsWithMinimalDetailsAsc();
 	}
 
+	@Override
+	public List<ContactMinimal> filterContactsBasedOnUserName(@NonNull String nameQuery) {
+		String query = "%" + nameQuery + "%";
+		return ContactDatabase.getDatabase().getContactDao().filterContactsBasedOnUserName(query);
+	}
+
 	private class ContactListCallback implements retrofit2.Callback<List<Contact>> {
 
 		@Override
