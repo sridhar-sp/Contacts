@@ -55,13 +55,8 @@ public class ContactRepository implements IContactRepository {
 	}
 
 	@Override
-	public LiveData<List<ContactMinimal>> getAllContactsWithMinimalDetailsDesc() {
-		return ContactDatabase.getDatabase().getContactDao().getAllContactsWithMinimalDetailsDesc();
-	}
-
-	@Override
-	public LiveData<List<ContactMinimal>> getAllContactsWithMinimalDetailsAsc() {
-		return ContactDatabase.getDatabase().getContactDao().getAllContactsWithMinimalDetailsAsc();
+	public LiveData<List<ContactMinimal>> getAllContactsWithMinimalDetails(boolean isAsc) {
+		return ContactDatabase.getDatabase().getContactDao().getAllContactsWithMinimalDetails(isAsc);
 	}
 
 	@Override
