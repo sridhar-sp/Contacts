@@ -14,7 +14,6 @@
         tools:listitem="@layout/partial_sticky_header_item" />
 
     <TextView
-        android:id="@+id/tv_layout_sh_sticky_index"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/StickyHeaderTextView"
+        android:id="@+id/tv_layout_sh_sticky_index" />
 </RelativeLayout>

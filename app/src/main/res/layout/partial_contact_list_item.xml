@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/contact_list_item_height"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
+    android:paddingTop="@dimen/contact_list_item_padding_vertical"
+    android:paddingBottom="@dimen/contact_list_item_padding_vertical"
+    android:paddingStart="@dimen/contact_list_item_padding_horizontal"
+    android:paddingEnd="@dimen/contact_list_item_padding_horizontal"
+    android:layout_marginStart="@dimen/contact_list_margin_start_from_index"
     android:orientation="horizontal">
 
     <TextView

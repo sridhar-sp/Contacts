@@ -8,4 +8,9 @@
     <dimen name="contact_initial_size">40dp</dimen>
 
     <dimen name="contact_list_item_height">56dp</dimen>
+
+    <dimen name="contact_list_margin_start_from_index">36dp</dimen>
+
+    <dimen name="contact_list_item_padding_vertical">8dp</dimen>
+    <dimen name="contact_list_item_padding_horizontal">16dp</dimen>
 </resources>

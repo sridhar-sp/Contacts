@@ -2,6 +2,7 @@ package com.assessment.contacts.sticky.header;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -10,14 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.assessment.contacts.Logger;
 import com.assessment.contacts.R;
 
 import java.util.List;
 
 public class StickyHeaderLayout<M extends IIndexItem> extends RelativeLayout {
-
-	private static final String TAG = StickyHeaderLayout.class.getSimpleName();
 
 	private RecyclerView rvGroupIndex;
 
@@ -56,11 +54,14 @@ public class StickyHeaderLayout<M extends IIndexItem> extends RelativeLayout {
 		rvGroupIndex = findViewById(R.id.rv_layout_sh_group_index_list);
 		tvStickyIndex = findViewById(R.id.tv_layout_sh_sticky_index);
 
+		rvGroupIndex.setOnTouchListener((v, event) -> event.getAction() == MotionEvent.ACTION_MOVE);
+
 		indexAdapter = new IndexAdapter<>(getContext());
 		rvGroupIndex.setAdapter(indexAdapter);
 	}
 
 	public void setIndexDataSet(List<M> datset) {
+		tvStickyIndex.setText("");//Clear old data
 		indexAdapter.setDataSet(datset);
 	}
 
@@ -75,7 +76,23 @@ public class StickyHeaderLayout<M extends IIndexItem> extends RelativeLayout {
 
 				scrollAlongWithContentRecyclerView(contentRecyclerView);
 
+				TextView tvFirstVisibleItem = (TextView) rvGroupIndex.getChildAt(0);
+				TextView tvSecondVisibleItem = (TextView) rvGroupIndex.getChildAt(1);
 
+				tvStickyIndex.setText(tvFirstVisibleItem.getText());
+				tvStickyIndex.setVisibility(VISIBLE);
+
+				if (getFirstLetterFrom(tvFirstVisibleItem) != getFirstLetterFrom(tvSecondVisibleItem)) {
+					tvStickyIndex.setVisibility(INVISIBLE);
+					tvFirstVisibleItem.setVisibility(VISIBLE);
+					tvSecondVisibleItem.setVisibility(VISIBLE);
+				} else {
+					tvFirstVisibleItem.setVisibility(INVISIBLE);
+					if (dy > 0)
+						tvStickyIndex.setVisibility(VISIBLE);
+					else
+						tvSecondVisibleItem.setVisibility(INVISIBLE);
+				}
 			}
 
 			private void scrollAlongWithContentRecyclerView(RecyclerView contentRecyclerView) {
@@ -86,12 +103,16 @@ public class StickyHeaderLayout<M extends IIndexItem> extends RelativeLayout {
 				assert null != groupIndexLayoutManager;
 
 				int childAdapterPosition = contentRecyclerView.getChildAdapterPosition(firstVisibleChild);
-				Logger.log(TAG, "childAdapterPosition " + childAdapterPosition);
-				Logger.log(TAG, "firstVisibleChild.getTop() " + firstVisibleChild.getTop());
+
 				groupIndexLayoutManager.scrollToPositionWithOffset(
 						childAdapterPosition,
 						firstVisibleChild.getTop()
 				);
+			}
+
+			private char getFirstLetterFrom(TextView textView) {
+				CharSequence text = textView.getText();
+				return null == text || text.length() == 0 ? ' ' : text.charAt(0);
 			}
 		});
 	}
