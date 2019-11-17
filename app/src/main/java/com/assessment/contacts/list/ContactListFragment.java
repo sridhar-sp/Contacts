@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +15,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.assessment.contacts.AppExecutorService;
-import com.assessment.contacts.Logger;
 import com.assessment.contacts.R;
 import com.assessment.contacts.database.table.model.ContactMinimal;
 import com.assessment.contacts.list.model.ContactListViewModel;
@@ -31,6 +32,10 @@ public class ContactListFragment extends Fragment {
 	private ContactListAdapter<ContactMinimal> mContactListAdapter;
 
 	private StickyHeaderLayout<ContactMinimal> mStickyHeaderLayout;
+
+	private SwipeRefreshLayout swipeRefreshLayout;
+
+	private TextView tvEmptyContactsPlaceholder;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,11 +54,20 @@ public class ContactListFragment extends Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		findGlobalViews(view);
 		setupContactList(view);
+		setupSwipeRefreshListener();
 
 		mContactViewModel = ViewModelProviders.of(this).get(ContactListViewModel.class);
-		mContactViewModel.getContactMinimalList().observe(this, this::onContactsDataSetChanged);
+		mContactViewModel.getContactMinimalList().observe(this, this::onContactsListChanged);
+
 		mContactViewModel.loadAllContacts();
+		swipeRefreshLayout.setRefreshing(true);
+	}
+
+	private void findGlobalViews(@NonNull View view) {
+		swipeRefreshLayout = view.findViewById(R.id.srl_cl_frag_list_refresh);
+		tvEmptyContactsPlaceholder = view.findViewById(R.id.tv_cl_frag_contact_list_empty);
 	}
 
 	private void setupContactList(View view) {
@@ -67,11 +81,17 @@ public class ContactListFragment extends Fragment {
 
 	}
 
-	private void onContactsDataSetChanged(List<ContactMinimal> contactMinimals) {
-		// TODO: 17-11-2019 Remove this log statement before commit.
-		Logger.log("HOME", "LIST " + contactMinimals);
+	private void setupSwipeRefreshListener() {
+		swipeRefreshLayout.setOnRefreshListener(() -> mContactViewModel.loadAllContacts());
+	}
+
+	private void onContactsListChanged(List<ContactMinimal> contactMinimals) {
+
 		mContactListAdapter.setDataSet(contactMinimals);
 		mStickyHeaderLayout.setIndexDataSet(contactMinimals);
+
+		tvEmptyContactsPlaceholder.setVisibility(contactMinimals.isEmpty() ? View.VISIBLE : View.GONE);
+		swipeRefreshLayout.setRefreshing(false);
 	}
 
 	@Override
@@ -89,15 +109,11 @@ public class ContactListFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_item_search:
-				return true;
-			case R.id.menu_item_sort:
-				mContactViewModel.toggleSort();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		if (item.getItemId() == R.id.menu_item_sort) {
+			mContactViewModel.toggleSort();
+			return true;
 		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private class SearchViewActionExpandListener implements MenuItem.OnActionExpandListener {
@@ -112,6 +128,7 @@ public class ContactListFragment extends Fragment {
 		public boolean onMenuItemActionExpand(MenuItem item) {
 			mSortMenuItem.setVisible(false);
 			mContactViewModel.enterSearchMode();
+			tvEmptyContactsPlaceholder.setText(R.string.text_no_search_results);
 			return true;
 		}
 
@@ -122,6 +139,7 @@ public class ContactListFragment extends Fragment {
 			// {@link SearchViewQueryTextListener#onQueryTextChange} one last time after this call executes. hence
 			// exit from search mode in the next UI cycle.
 			AppExecutorService.getInstance().getMainThreadExecutor().execute(() -> mContactViewModel.exitSearchMode());
+			tvEmptyContactsPlaceholder.setText(R.string.text_empty_contacts);
 			return true;
 		}
 	}

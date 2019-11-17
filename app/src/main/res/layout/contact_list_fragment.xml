@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/srl_cl_frag_list_refresh"
     tools:context=".list.ContactListFragment">
 
-    <com.assessment.contacts.sticky.header.StickyHeaderLayout
-        android:id="@+id/shl_cl_frag_sticky_header"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_cl_frag_contact_list"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/partial_contact_list_item" />
+        tools:context=".list.ContactListFragment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.assessment.contacts.sticky.header.StickyHeaderLayout
+            android:id="@+id/shl_cl_frag_sticky_header"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_cl_frag_contact_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/partial_contact_list_item" />
+
+        <TextView
+            android:id="@+id/tv_cl_frag_contact_list_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@mipmap/ic_empty_contacts_placeholder"
+            android:drawablePadding="16dp"
+            android:gravity="center"
+            android:text="@string/text_empty_contacts"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/tertiaryTextColor"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/shl_cl_frag_sticky_header"
+            app:layout_constraintEnd_toEndOf="@+id/shl_cl_frag_sticky_header"
+            app:layout_constraintStart_toStartOf="@+id/shl_cl_frag_sticky_header"
+            app:layout_constraintTop_toTopOf="@+id/shl_cl_frag_sticky_header"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

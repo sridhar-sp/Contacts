@@ -12,7 +12,7 @@
     <style name="AppTheme.Home">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="drawerArrowStyle">@style/DrawerArrowToggle</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
     </style>
 
     <style name="DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -27,7 +27,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/contact_list_item_height</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
-        <item name="android:textColor">#7F919F</item>
+        <item name="android:textColor">@color/tertiaryTextColor</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLength">1</item>
         <item name="android:textAllCaps">true</item>

@@ -6,4 +6,7 @@
     <string name="text_search_contacts">Search contacts</string>
 
     <string name="text_sort">Sort</string>
+
+    <string name="text_no_search_results">No search results</string>
+    <string name="text_empty_contacts">Your contact list is empty</string>
 </resources>
