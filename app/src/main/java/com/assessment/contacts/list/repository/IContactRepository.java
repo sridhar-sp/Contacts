@@ -11,6 +11,9 @@ import com.assessment.contacts.database.table.model.ContactMinimal;
 
 import java.util.List;
 
+/**
+ * Contact repository to manage various data source, such as network and local database.
+ */
 public interface IContactRepository {
 
 	/**

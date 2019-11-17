@@ -15,12 +15,15 @@ public class ContactMinimal implements IContactItem {
 
 	private static final String EMPTY_STRING = "";
 
+	//Primary id, used to get the {@link Contact}, if needed.
 	@ColumnInfo(name = "id")
 	private int mId;
 
+	//Name of the contact.
 	@ColumnInfo(name = "name")
 	private String mName;
 
+	//Cached background color used on the index character.
 	@ColorInt
 	@Ignore
 	private int mInitialBackgroundColor = -1;

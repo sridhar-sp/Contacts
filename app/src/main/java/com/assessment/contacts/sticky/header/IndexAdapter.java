@@ -24,7 +24,7 @@ public class IndexAdapter<M extends IIndexItem>
 	 *
 	 * @param context Context from which the adapter class is invoked.
 	 */
-	public IndexAdapter(Context context) {
+	IndexAdapter(Context context) {
 		super(context);
 	}
 

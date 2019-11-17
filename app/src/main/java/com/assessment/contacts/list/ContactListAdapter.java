@@ -19,8 +19,10 @@ import java.util.Random;
 public class ContactListAdapter<M extends IContactItem> extends
 		BaseRecyclerViewListAdapter<ContactListAdapter.ContactViewHolder, M, List<M>> {
 
+	//Contains the color to apply in each contact list item index text-view.
 	private int[] mInitialColors;
 
+	//Used to take random colors from {@link #mInitialColors}.
 	private Random mRandom = new Random();
 
 	/**
@@ -46,11 +48,12 @@ public class ContactListAdapter<M extends IContactItem> extends
 		IContactItem iContactItem = getItem(position);
 
 		if (null == iContactItem)
-			return;
+			return;//Never happens, just to handle the very worst case scenario, which is unlikely to happen.
 
 		holder.tvContactName.setText(iContactItem.getText());
 		holder.tvContactInitial.setText(iContactItem.getInitial());
 
+		//Cache the background color for next time, since the random color selection involves quite a computation.
 		if (iContactItem.getInitialBackgroundColor() == -1)
 			iContactItem.setInitialBackgroundColor(mInitialColors[mRandom.nextInt(mInitialColors.length)]);
 

@@ -15,6 +15,12 @@ import com.assessment.contacts.R;
 
 import java.util.List;
 
+/**
+ * This implementation takes care showing a sticky group index and orchestrate it's scroll with it's associated
+ * content recycler-view.
+ *
+ * @param <M> The model object satisfies the {@link IIndexItem} property.
+ */
 public class StickyHeaderLayout<M extends IIndexItem> extends RelativeLayout {
 
 	private RecyclerView rvGroupIndex;

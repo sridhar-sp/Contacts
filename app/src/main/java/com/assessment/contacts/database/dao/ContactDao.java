@@ -28,7 +28,7 @@ public interface ContactDao {
 	/**
 	 * Query and return the Minimal contact details based on sort preference given by {@code isAsc}.
 	 *
-	 * @param isAsc True if results are to be sorted in ascending order, false in descending order.
+	 * @param isAsc True if results are to be sorted in ascending order, false if descending order.
 	 * @return The sorted list based on {@code isAsc}.
 	 */
 	@MainThread
