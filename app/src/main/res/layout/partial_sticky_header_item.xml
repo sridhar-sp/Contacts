@@ -2,4 +2,4 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_partial_sh_sticky_index_item"
     style="@style/StickyHeaderTextView"
-    android:maxLength="1" />
+    />
