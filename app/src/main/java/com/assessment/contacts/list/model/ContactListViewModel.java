@@ -45,6 +45,11 @@ public class ContactListViewModel extends ViewModel {
 	 */
 	private boolean isSortAsc = true;
 
+	/**
+	 * Search-mode status.
+	 */
+	private boolean isSearchModeActive = false;
+
 	public ContactListViewModel() {
 		mContactRepository = ContactRepository.newInstance(this::onContactListFetchedFromNetwork);
 
@@ -72,6 +77,8 @@ public class ContactListViewModel extends ViewModel {
 	 * @param isSuccess True if the contact list is successfully fetched from the network., false otherwise.
 	 */
 	private void onContactListFetchedFromNetwork(boolean isSuccess) {
+		if (isSearchModeActive)
+			return;//Search in progress, hence should not update the values.
 		fetchContactBasedOnSortPreference();
 	}
 
@@ -79,6 +86,7 @@ public class ContactListViewModel extends ViewModel {
 	 * Perform necessary operation upon entering search mode.
 	 */
 	public void enterSearchMode() {
+		isSearchModeActive = true;
 		removeLastAttachedDataSource();
 	}
 
@@ -97,6 +105,7 @@ public class ContactListViewModel extends ViewModel {
 	 * Perform necessary operation upon exiting search mode.
 	 */
 	public void exitSearchMode() {
+		isSearchModeActive = false;
 		fetchContactBasedOnSortPreference();
 	}
 

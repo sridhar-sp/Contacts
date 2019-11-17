@@ -129,6 +129,7 @@ public class ContactListFragment extends Fragment {
 			mSortMenuItem.setVisible(false);
 			mContactViewModel.enterSearchMode();
 			tvEmptyContactsPlaceholder.setText(R.string.text_no_search_results);
+			swipeRefreshLayout.setEnabled(false);//Shouldn't allow user to refresh, when they are in search mode.
 			return true;
 		}
 
@@ -140,6 +141,7 @@ public class ContactListFragment extends Fragment {
 			// exit from search mode in the next UI cycle.
 			AppExecutorService.getInstance().getMainThreadExecutor().execute(() -> mContactViewModel.exitSearchMode());
 			tvEmptyContactsPlaceholder.setText(R.string.text_empty_contacts);
+			swipeRefreshLayout.setEnabled(true);//Should allow user to refresh, when they are out of search mode.
 			return true;
 		}
 	}
