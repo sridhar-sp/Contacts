@@ -3,19 +3,19 @@ package com.assessment.contacts.database.table.model;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
+import com.assessment.contacts.sticky.header.IIndexItem;
+
 /**
  * Class represents the item displayed by the Contact List screen.
  */
-public interface IContactItem {
+public interface IContactItem extends IIndexItem {
 
 	@NonNull
 	String getText();
-
-	@NonNull
-	String getInitial();
 
 	@ColorInt
 	int getInitialBackgroundColor();
 
 	void setInitialBackgroundColor(@ColorInt int color);
+
 }

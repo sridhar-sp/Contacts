@@ -20,10 +20,17 @@ import com.assessment.contacts.Logger;
 import com.assessment.contacts.R;
 import com.assessment.contacts.database.table.model.ContactMinimal;
 import com.assessment.contacts.list.model.ContactListViewModel;
+import com.assessment.contacts.sticky.header.StickyHeaderLayout;
+
+import java.util.List;
 
 public class ContactListFragment extends Fragment {
 
-	private ContactListViewModel mViewModel;
+	private ContactListViewModel mContactViewModel;
+
+	private ContactListAdapter<ContactMinimal> mContactListAdapter;
+
+	private StickyHeaderLayout<ContactMinimal> mStickyHeaderLayout;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,25 +49,29 @@ public class ContactListFragment extends Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mViewModel = ViewModelProviders.of(this).get(ContactListViewModel.class);
-
 		setupContactList(view);
+
+		mContactViewModel = ViewModelProviders.of(this).get(ContactListViewModel.class);
+		mContactViewModel.getContactMinimalList().observe(this, this::onContactsDataSetChanged);
+		mContactViewModel.loadAllContacts();
 	}
 
 	private void setupContactList(View view) {
-		RecyclerView recyclerView = view.findViewById(R.id.rv_cl_frag_contact_list);
+		RecyclerView rvContactList = view.findViewById(R.id.rv_cl_frag_contact_list);
 
-		ContactListAdapter<ContactMinimal> adapter = new ContactListAdapter<>(getContext());
-		recyclerView.setAdapter(adapter);
+		mContactListAdapter = new ContactListAdapter<>(getContext());
+		rvContactList.setAdapter(mContactListAdapter);
 
-//		mViewModel.getContactMinimalList().observe(this, adapter::setDataSet);
+		mStickyHeaderLayout = view.findViewById(R.id.shl_cl_frag_sticky_header);
+		mStickyHeaderLayout.attachWithContentRecyclerView(rvContactList);
 
-		mViewModel.getContactMinimalList().observe(this, contactMinimals -> {
-			Logger.log("HOME", "LIST " + contactMinimals);
-			adapter.setDataSet(contactMinimals);
-		});
+	}
 
-		mViewModel.loadAllContacts();
+	private void onContactsDataSetChanged(List<ContactMinimal> contactMinimals) {
+		// TODO: 17-11-2019 Remove this log statement before commit.
+		Logger.log("HOME", "LIST " + contactMinimals);
+		mContactListAdapter.setDataSet(contactMinimals);
+		mStickyHeaderLayout.setIndexDataSet(contactMinimals);
 	}
 
 	@Override
@@ -82,7 +93,7 @@ public class ContactListFragment extends Fragment {
 			case R.id.menu_item_search:
 				return true;
 			case R.id.menu_item_sort:
-				mViewModel.toggleSort();
+				mContactViewModel.toggleSort();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -100,7 +111,7 @@ public class ContactListFragment extends Fragment {
 		@Override
 		public boolean onMenuItemActionExpand(MenuItem item) {
 			mSortMenuItem.setVisible(false);
-			mViewModel.enterSearchMode();
+			mContactViewModel.enterSearchMode();
 			return true;
 		}
 
@@ -110,7 +121,7 @@ public class ContactListFragment extends Fragment {
 			//Menu collapse will clear the search view text, that wiil call
 			// {@link SearchViewQueryTextListener#onQueryTextChange} one last time after this call executes. hence
 			// exit from search mode in the next UI cycle.
-			AppExecutorService.getInstance().getMainThreadExecutor().execute(() -> mViewModel.exitSearchMode());
+			AppExecutorService.getInstance().getMainThreadExecutor().execute(() -> mContactViewModel.exitSearchMode());
 			return true;
 		}
 	}
@@ -123,7 +134,7 @@ public class ContactListFragment extends Fragment {
 
 		@Override
 		public boolean onQueryTextChange(String newText) {
-			mViewModel.searchContactAsync(newText);
+			mContactViewModel.searchContactAsync(newText);
 			return false;
 		}
 	}

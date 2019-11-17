@@ -36,7 +36,7 @@ public class ContactMinimal implements IContactItem {
 	@Override
 	public String getInitial() {
 		String text = getText();
-		return text.isEmpty() ? EMPTY_STRING : String.valueOf(text.charAt(0));
+		return text.isEmpty() ? EMPTY_STRING : String.valueOf(text.charAt(0)).toUpperCase();
 	}
 
 	public void setName(String mName) {

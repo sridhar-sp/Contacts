@@ -6,12 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".list.ContactListFragment">
 
+    <com.assessment.contacts.sticky.header.StickyHeaderLayout
+        android:id="@+id/shl_cl_frag_sticky_header"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_cl_frag_contact_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:listitem="@layout/partial_contact_list_item"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/partial_contact_list_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
